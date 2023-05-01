@@ -13,20 +13,20 @@ task<bool> inside_loop(Socket& socket) {
         send_len += res;
     }
 
-    std::cout<<"Done send "<<send_len<<"\n";
+    // std::cout<<"Done send "<<send_len<<"\n";
     if(recv_len <= 0) {
         co_return false;
     }
-    printf("%s\n", buffer);
+    // printf("%s\n", buffer);
     co_return true;
 }
 
 task<> echo_socket(std::shared_ptr<Socket> socket) {
     for(;;) {
-        std::cout<<"BEGIN\n";
+        // std::cout<<"BEGIN\n";
         bool b = co_await inside_loop(*socket);
         if(!b) break;
-        std::cout<<"END\n";
+        // std::cout<<"END\n";
     }
 }
 
@@ -40,7 +40,7 @@ task<> accept(Socket& listen) {
 
 int main() {
     IoContext io_context;
-    Socket listen{"10009", io_context};
+    Socket listen{"12345", io_context};
     auto t = accept(listen);
     t.resume();
 

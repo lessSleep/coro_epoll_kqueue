@@ -32,7 +32,7 @@ public:
     }
 
     ReturnValue await_resume() noexcept {
-        std::cout<<"await_resume\n";
+        // std::cout<<"await_resume\n";
         if(suspended_) {
             value_ = static_cast<Syscall*>(this)->Syscall();
         }
@@ -52,18 +52,18 @@ class Accept : public AsyncSyscall<Accept, int> {
 public:
     Accept(Socket* socket) : AsyncSyscall{}, socket_(socket) {
         socket_->io_context_.WatchRead(socket_);
-        std::cout<<" socket accept opertion\n";
+        // std::cout<<" socket accept opertion\n";
     }
 
     ~Accept() {
         socket_->io_context_.UnwatchRead(socket_);
-        std::cout<<"~socket accept operation\n";
+        // std::cout<<"~socket accept operation\n";
     }
 
     int Syscall() {
         struct sockaddr_storage addr;
         socklen_t addr_size = sizeof(addr);
-        std::cout<<"accept "<<socket_->fd_<<"\n";
+        // std::cout<<"accept "<<socket_->fd_<<"\n";
         return ::accept(socket_->fd_, (struct sockaddr*)&addr, &addr_size);
     }
 
@@ -81,15 +81,15 @@ public:
     Send(Socket* socket, void* buffer, std::size_t len) : AsyncSyscall(),
         socket_(socket), buffer_(buffer), len_(len) {
         socket_->io_context_.WatchWrite(socket_);
-        std::cout<<"socket send operation\n";
+        // std::cout<<"socket send operation\n";
     }
     ~Send() {
         socket_->io_context_.UnwatchWrite(socket_);
-        std::cout<<"~ socket send operation\n";
+        // std::cout<<"~ socket send operation\n";
     }
 
     ssize_t Syscall() {
-        std::cout<<"send"<<socket_->fd_<<"\n";
+        // std::cout<<"send"<<socket_->fd_<<"\n";
         return ::send(socket_->fd_, buffer_, len_, 0);
     }
 
@@ -107,16 +107,16 @@ public:
     Recv(Socket* socket, void* buffer, size_t len): AsyncSyscall(), 
         socket_(socket), buffer_(buffer), len_(len) {
         socket_->io_context_.WatchRead(socket_);
-        std::cout<<"socket recv operation\n";
+        // std::cout<<"socket recv operation\n";
     }
 
     ~Recv() {
         socket_->io_context_.UnwatchRead(socket_);
-        std::cout<<"~socket recv operation\n";
+        // std::cout<<"~socket recv operation\n";
     }
 
     ssize_t Syscall() {
-        std::cout<<"recv fd="<<socket_->fd_<<"\n";
+        // std::cout<<"recv fd="<<socket_->fd_<<"\n";
         return ::recv(socket_->fd_, buffer_, len_, 0);
     }
     
